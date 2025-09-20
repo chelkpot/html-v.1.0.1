@@ -1,0 +1,37 @@
+name: Autograding
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Тест 1: Вставить картинку
+      - name: Test image tag
+        run: |
+          grep -q '<img src="https://example.com/image.jpg"' index.html
+
+      # Тест 2: Ссылка-картинка
+      - name: Test image link
+        run: |
+          grep -q '<a href="https://google.com"><img src="https://example.com/image.jpg" /></a>' index.html
+
+      # Тест 3: Вложенный список
+      - name: Test nested list
+        run: |
+          grep -q '<ul>.*<li>.*<ul>.*<li>.*</ul>.*</li>.*</ul>' index.html
+
+      # Тест 4: Список определений
+      - name: Test definition list
+        run: |
+          grep -q '<dl>.*<dt>.*</dt>.*<dd>.*</dd>.*</dl>' index.html
+
+      # Тест 5: Тег <pre>
+      - name: Test pre tag
+        run: |
+          grep -q '<pre>.*</pre>' index.html
+
+      # Тест 6: Форматирование текста
+      - name: Test text formatting
+        run: |
+          grep -q '<b><u>.*</u></b>' index.html
