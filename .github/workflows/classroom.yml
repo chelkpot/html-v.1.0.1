@@ -1,0 +1,92 @@
+name: Classroom
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # --- Проверка 1: подключен CSS-файл ---
+      - name: Проверка подключения style.css
+        run: |
+          if grep -Ei -q '<link[^>]+href="style\.css"[^>]*>' index.html; then
+            echo "✅ CSS подключён"
+          else
+            echo "❌ Не найдено подключение style.css"
+          fi
+
+      # --- Проверка 2: отсутствие встроенных стилей ---
+      - name: Проверка на встроенные стили
+        run: |
+          if grep -Ei -q '<[^>]+style=' index.html; then
+            echo "❌ Найдены встроенные стили (style=\"...\") — нужно использовать CSS-файл"
+          else
+            echo "✅ Встроенных стилей не найдено"
+          fi
+
+      # --- Проверка 3: наличие селекторов тегов ---
+      - name: Проверка селекторов тегов
+        run: |
+          if grep -Eiq '(^|\s)(body|p|h1|h2|h3)\s*\{' style.css; then
+            echo "✅ Использованы селекторы тегов"
+          else
+            echo "❌ Не найдено селекторов тегов"
+          fi
+
+      # --- Проверка 4: наличие классов ---
+      - name: Проверка классов
+        run: |
+          if grep -Eiq '\.[A-Za-z0-9_-]+\s*\{' style.css; then
+            echo "✅ Использованы классы"
+          else
+            echo "❌ Не найдено CSS-классов"
+          fi
+
+      # --- Проверка 5: наличие идентификаторов ---
+      - name: Проверка идентификаторов
+        run: |
+          if grep -Eiq '#[A-Za-z0-9_-]+\s*\{' style.css; then
+            echo "✅ Использованы идентификаторы"
+          else
+            echo "❌ Не найдено CSS-идентификаторов"
+          fi
+
+      # --- Проверка 6: наличие дочернего селектора ---
+      - name: Проверка дочерних селекторов
+        run: |
+          if grep -Eiq '[A-Za-z0-9]+\s*>\s*[A-Za-z0-9]+\s*\{' style.css; then
+            echo "✅ Использован дочерний селектор (A > B)"
+          else
+            echo "❌ Не найден дочерний селектор (A > B)"
+          fi
+
+      # --- Проверка 7: оформление текста (цвет, размер, шрифт) ---
+      - name: Проверка свойств текста
+        run: |
+          if grep -Eiq 'font|color' style.css; then
+            echo "✅ Найдены свойства оформления текста"
+          else
+            echo "❌ Не найдено свойств, отвечающих за оформление текста"
+          fi
+
+      # --- Проверка 8: оформление фона ---
+      - name: Проверка фона
+        run: |
+          if grep -Eiq 'background' style.css; then
+            echo "✅ Найдено свойство background"
+          else
+            echo "❌ Не найдено свойства background"
+          fi
+
+      # --- Проверка 9: размер текста ---
+      - name: Проверка font-size
+        run: |
+          if grep -Eiq 'font-size' style.css; then
+            echo "✅ Найдено свойство font-size"
+          else
+            echo "❌ Не найдено свойство font-size"
+          fi
+
